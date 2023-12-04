@@ -30,16 +30,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun Greeting(name: String) {
+    Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "Text preview")
 @Composable
-fun GreetingPreview() {
+fun DefaultPreview() {
     BasicsCodeLabTheme {
         Greeting("Android")
     }

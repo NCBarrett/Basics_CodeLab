@@ -70,6 +70,13 @@ private fun Greeting(name: String) {
     }
 }
 
+@Composable
+fun OnboardingScreen(modifier: Modifier = Modifier) {
+    // TODO: This state should be hoisted
+
+
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {

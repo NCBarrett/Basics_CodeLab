@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,12 +32,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MyApp(modifier: Modifier = Modifier) {
-    Surface (
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.background
+private fun MyApp(
+    modifier: Modifier = Modifier,
+    names: List<String> = listOf("World", "Compose")
     ) {
-        Greeting("Android")
+    Column (modifier = modifier.padding(vertical = 4.dp)) {
+        for (name in names) {
+            Greeting(name)
+        }
     }
 }
 
@@ -43,11 +47,25 @@ private fun MyApp(modifier: Modifier = Modifier) {
 private fun Greeting(name: String) {
     val expanded = remember { mutableStateOf(false) }
 
-    Surface(color = MaterialTheme.colorScheme.primary
+    val extraPadding = if (expanded.value) 48.dp else 0.dp
+
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ) {
-        Column (modifier = Modifier.padding(24.dp)) {
-            Text("Hello")
-            Text("$name")
+        Row (modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(bottom = extraPadding)
+            ) {
+                Text(text = "Hello, ")
+                Text(text = name)
+            }
+            ElevatedButton(
+                onClick = { expanded.value = !expanded.value }
+            ) {
+                Text(if (expanded.value) "Show Less" else "Show more")
+            }
         }
     }
 }

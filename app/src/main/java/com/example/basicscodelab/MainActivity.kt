@@ -1,5 +1,6 @@
 package com.example.basicscodelab
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -26,7 +27,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.basicscodelab.ui.theme.BasicsCodeLabTheme
 
@@ -46,64 +49,12 @@ class MainActivity : ComponentActivity() {
 fun MyApp(modifier: Modifier = Modifier) {
     var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
 
-    Surface(modifier) {
+    Surface(modifier, color = MaterialTheme.colorScheme.background) {
         if (shouldShowOnboarding) {
             OnboardingScreen( onContinueClicked = { shouldShowOnboarding = false } )
         } else {
             Greetings()
         }
-    }
-}
-
-@Composable
-fun Greetings(
-    modifier: Modifier = Modifier,
-    names: List<String> = List(1000) {"$it"}
-) {
-    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
-        items(items = names) { name ->
-            Greeting(name = name)
-        }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    var expanded by remember { mutableStateOf(false) }
-
-    val extraPadding by animateDpAsState(
-        if (expanded) 48.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
-    Surface(
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-    ) {
-        Row (modifier = Modifier.padding(24.dp)) {
-            Column(modifier = Modifier
-                .weight(1f)
-                .padding(bottom = extraPadding.coerceAtLeast(0.dp))
-            ) {
-                Text(text = "Hello, ")
-                Text(text = name)
-            }
-            ElevatedButton(
-                onClick = { expanded = !expanded }
-            ) {
-                Text(if (expanded) "Show Less" else "Show more")
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 320)
-@Composable
-fun DefaultPreview() {
-    BasicsCodeLabTheme {
-        Greetings()
     }
 }
 
@@ -127,19 +78,63 @@ fun OnboardingScreen(
     }
 }
 
-@Preview(showBackground = true, widthDp = 320)
 @Composable
-private fun GreetingsPreview() {
-    BasicsCodeLabTheme {
-        Greetings()
+private fun Greetings(
+    modifier: Modifier = Modifier,
+    names: List<String> = List(1000) { "$it" }
+) {
+    LazyColumn(modifier = modifier.padding(vertical = 4.dp)) {
+        items(items = names) { name ->
+            Greeting(name = name)
+        }
     }
 }
 
-@Preview
 @Composable
-fun MyAppPreview() {
+private fun Greeting(name: String) {
+    var expanded by remember { mutableStateOf(false) }
+
+    val extraPadding: Dp by animateDpAsState(
+        if (expanded) 48.dp else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+    ) {
+        Row (modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier
+                .weight(1f)
+                .padding(bottom = extraPadding.coerceAtLeast(0.dp))
+            ) {
+                Text(text = "Hello, ")
+                Text(text = name, style = MaterialTheme.typography.headlineMedium.copy(
+                    fontWeight = FontWeight.ExtraBold)
+                )
+            }
+            ElevatedButton(
+                onClick = { expanded = !expanded }
+            ) {
+                Text(if (expanded) "Show Less" else "Show more")
+            }
+        }
+    }
+}
+
+@Preview(
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "Dark"
+)
+@Preview(showBackground = true, widthDp = 320)
+@Composable
+private fun DefaultPreview() {
     BasicsCodeLabTheme {
-        MyApp(Modifier.fillMaxSize())
+        Greetings()
     }
 }
 
@@ -148,5 +143,13 @@ fun MyAppPreview() {
 fun OnboardingPreview() {
     BasicsCodeLabTheme {
         OnboardingScreen(onContinueClicked = {} ) // Do nothing on click
+    }
+}
+
+@Preview
+@Composable
+fun MyAppPreview() {
+    BasicsCodeLabTheme {
+        MyApp(Modifier.fillMaxSize())
     }
 }
